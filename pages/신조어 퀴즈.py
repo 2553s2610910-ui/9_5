@@ -1,10 +1,9 @@
 import streamlit as st
-import random
 
 # 1. 페이지 설정
-st.set_page_config(page_title="신조어 백과사전 & 퀴즈", page_icon="🔥", layout="centered")
+st.set_page_config(page_title="최신 신조어 백과사전 & 퀴즈", page_icon="🔥", layout="centered")
 
-# 2. 신조어 데이터베이스 (요청하신 최신 신조어 모음)
+# 2. 신조어 데이터
 DATA = [
     {
         "word": "줴줴이야",
@@ -92,4 +91,60 @@ with tab1:
 
     if st.session_state.quiz_done:
         st.balloons()
-        st.success(f"🎉 퀴즈 종료!
+        st.success(f"🎉 퀴즈 종료! 결과: **{len(DATA)}문제 중 {st.session_state.score}점**")
+        
+        if st.session_state.score == len(DATA):
+            st.info("🏆 **당신은 'Z세대 밈 전문가'!** 모든 신조어를 완벽하게 파악하고 계시네요!")
+        else:
+            st.info("😎 **다시 도전해보세요!** 백과사전 탭에서 공부하면 만점을 받을 수 있습니다.")
+
+        if st.button("🔄 처음부터 다시 풀기"):
+            st.session_state.score = 0
+            st.session_state.step = 0
+            st.session_state.quiz_done = False
+            st.rerun()
+
+    else:
+        idx = st.session_state.step
+        item = DATA[idx]
+
+        st.progress((idx) / len(DATA))
+        st.markdown(f"#### **Q{idx+1}. '{item['word']}'의 뜻으로 올바른 것은?**")
+
+        # Form을 사용하여 제출 시 동작을 깔끔하게 처리
+        with st.form(key=f"quiz_form_{idx}"):
+            user_choice = st.radio(
+                "하나를 선택하세요:",
+                options=list(range(len(item["options"]))),
+                format_func=lambda x: item["options"][x]
+            )
+            submit = st.form_submit_button("정답 제출")
+
+            if submit:
+                if user_choice == item["answer"]:
+                    st.session_state.score += 1
+                    st.toast("정답입니다! 👏", icon="✅")
+                else:
+                    st.toast("아쉽네요! 오답입니다.", icon="❌")
+
+                if idx + 1 < len(DATA):
+                    st.session_state.step += 1
+                else:
+                    st.session_state.quiz_done = True
+                st.rerun()
+
+# [탭 2] 백과사전
+with tab2:
+    st.subheader("📚 최신 신조어 모아보기")
+    
+    search = st.text_input("🔍 궁금한 신조어 검색", "")
+    
+    for item in DATA:
+        if search.lower() in item["word"].lower() or search.lower() in item["meaning"].lower():
+            with st.expander(f"📌 **{item['word']}**"):
+                st.write(f"**의미:** {item['meaning']}")
+                st.write(f"**설명:** {item['detail']}")
+                st.info(f"**활용 예시:** \"{item['example']}\"")
+
+st.markdown("---")
+st.caption("Streamlit Community Cloud 전용 무오류 앱입니다.")
