@@ -146,5 +146,3 @@ with tab2:
                 st.write(f"**설명:** {item['detail']}")
                 st.info(f"**활용 예시:** \"{item['example']}\"")
 
-st.markdown("---")
-st.caption("Streamlit Community Cloud 전용 무오류 앱입니다.")
