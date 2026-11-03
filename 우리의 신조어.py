@@ -281,17 +281,17 @@ if menu == "🏠 메인 홈 (백과사전)":
     btn_col1, btn_col2, btn_col3 = st.columns(3)
     
     with btn_col1:
-        if st.button("신조어 해석으로 바로가기", use_container_width=True):
+        if st.button("🔄 세대 간 번역기 바로가기", use_container_width=True):
             st.session_state.menu_selection = "🔄 세대 간 번역기"
             st.rerun()
             
     with btn_col2:
-        if st.button("신조어 퀴즈로 바로가기", use_container_width=True):
+        if st.button("💡 신조어 제안하기 바로가기", use_container_width=True):
             st.session_state.menu_selection = "💡 신조어 제안하기"
             st.rerun()
             
     with btn_col3:
-        if st.button("신조어 단어장으로 바로가기", use_container_width=True):
+        if st.button("📊 트렌드 통계 바로가기", use_container_width=True):
             st.session_state.menu_selection = "📊 트렌드 통계"
             st.rerun()
 
