@@ -229,6 +229,10 @@ data = load_neologism_data()
 # ==========================================
 # 3. Sidebar Navigation & Global Filters
 # ==========================================
+# Session state 초기화
+if "menu_selection" not in st.session_state:
+    st.session_state.menu_selection = "🏠 메인 홈 (백과사전)"
+
 with st.sidebar:
     st.image("https://img.icons8.com/isometric/100/000000/book.png", width=60)
     st.title("📘 Gemini 신조어 사전")
@@ -236,11 +240,11 @@ with st.sidebar:
     
     st.divider()
     
-    # Navigation Menu
+    # Navigation Menu (key="menu_selection" 으로 session state 연결)
     menu = st.radio(
         "메뉴 이동",
         ["🏠 메인 홈 (백과사전)", "🔄 세대 간 번역기", "💡 신조어 제안하기", "📊 트렌드 통계"],
-        index=0
+        key="menu_selection"
     )
     
     st.divider()
@@ -271,6 +275,27 @@ st.markdown("""
 # ==========================================
 
 if menu == "🏠 메인 홈 (백과사전)":
+    
+    # ------------------ Quick Navigation Shortcut Buttons ------------------
+    st.markdown("### 🚀 주요 기능 바로가기")
+    btn_col1, btn_col2, btn_col3 = st.columns(3)
+    
+    with btn_col1:
+        if st.button("신조어 해석으로 바로가기", use_container_width=True):
+            st.session_state.menu_selection = "🔄 세대 간 번역기"
+            st.rerun()
+            
+    with btn_col2:
+        if st.button("신조어 퀴즈로 바로가기", use_container_width=True):
+            st.session_state.menu_selection = "💡 신조어 제안하기"
+            st.rerun()
+            
+    with btn_col3:
+        if st.button("신조어 단어장으로 바로가기", use_container_width=True):
+            st.session_state.menu_selection = "📊 트렌드 통계"
+            st.rerun()
+
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # ------------------ Key Metrics Summary ------------------
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
